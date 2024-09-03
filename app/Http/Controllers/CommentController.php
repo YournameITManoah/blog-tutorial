@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Models\Post;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -14,7 +16,9 @@ class CommentController extends Controller
             'body' => 'required|min:2'
         ]);
 
-        $post->addComment(request('body'));
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $user->postComment($post, new Comment(request(['body'])));
 
         return back();
     }
